@@ -56,6 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               TextField(
                 keyboardType: TextInputType.emailAddress,
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   email = value;
@@ -68,6 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               TextField(
                 obscureText: true,
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   password = value;

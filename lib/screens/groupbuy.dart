@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:maitungsi/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:maitungsi/components/reusablebutton.dart';
+import 'dart:math';
 
 class GroupBuy extends StatefulWidget {
   static String id = 'Group Buy';
@@ -12,14 +14,48 @@ class GroupBuy extends StatefulWidget {
 
 class _GroupBuyState extends State<GroupBuy> {
   String logInUser;
+  String categoryInput;
+
+  TextEditingController _textFieldController = TextEditingController();
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+            title: Text(
+              'Add Category',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: TextField(
+              controller: _textFieldController,
+              style: TextStyle(color: Colors.white),
+              onChanged: (value) {
+                categoryInput = value;
+              },
+              decoration: InputDecoration(hintText: "Category"),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('SUBMIT'),
+                onPressed: () {
+                  _textFieldController.clear();
+                  Firestore.instance
+                      .collection('categories')
+                      .document()
+                      .setData({'category': categoryInput, 'email': logInUser});
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
     getCurrentUser();
-  }
-
-  void updateUI() {
-    categoryStream();
   }
 
   getCurrentUser() async {
@@ -27,7 +63,7 @@ class _GroupBuyState extends State<GroupBuy> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       logInUser = prefs.getString('email');
       setState(() {
-        updateUI();
+        // updateUI();
       });
     } catch (e) {
       print(e);
@@ -35,7 +71,6 @@ class _GroupBuyState extends State<GroupBuy> {
   }
 
   void categoryStream() async {
-    print(logInUser);
     await for (var snapshot in Firestore.instance
         .collection('categories')
         .where("email", isEqualTo: logInUser)
@@ -50,6 +85,8 @@ class _GroupBuyState extends State<GroupBuy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 4.0,
+        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
         title: Text('My Buy List'),
         actions: <Widget>[
           IconButton(
@@ -65,7 +102,37 @@ class _GroupBuyState extends State<GroupBuy> {
       body: CategoryList(logInUser),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        onPressed: () {
+          _displayDialog(context);
+        },
+      ),
+      bottomNavigationBar: Container(
+        height: 55.0,
+        child: BottomAppBar(
+          color: Color.fromRGBO(58, 66, 86, 1.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.home, color: Colors.white),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.blur_on, color: Colors.white),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.hotel, color: Colors.white),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.account_box, color: Colors.white),
+                onPressed: () {},
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -90,20 +157,21 @@ class CategoryList extends StatelessWidget {
               ),
             );
           }
-          List<MaterialButton> categoryListWidget = [];
+          List<ReusableButton> categoryListWidget = [];
           final categoryList = snapshot.data.documents.reversed;
           for (var category in categoryList) {
-            final MaterialButton categoryButton = MaterialButton(
-              child: Text(category.data['category']),
-              onPressed: () {},
+            final ReusableButton categoryButton = ReusableButton(
+              colour:
+                  Colors.primaries[Random().nextInt(Colors.primaries.length)],
+              text: category.data['category'],
+              onPress: () {},
             );
             categoryListWidget.add(categoryButton);
           }
-          return ListWheelScrollView(
+          return ListView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
             children: categoryListWidget,
-            itemExtent: 40.0,
-            useMagnifier: true,
-            magnification: 1.2,
           );
         });
   }
