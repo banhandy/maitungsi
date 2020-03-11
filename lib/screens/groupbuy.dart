@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:maitungsi/screens/detailtungsi.dart';
 import 'package:maitungsi/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:maitungsi/components/reusablebutton.dart';
-import 'dart:math';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class GroupBuy extends StatefulWidget {
   static String id = 'Group Buy';
@@ -17,40 +18,47 @@ class _GroupBuyState extends State<GroupBuy> {
   String categoryInput;
 
   TextEditingController _textFieldController = TextEditingController();
-  _displayDialog(BuildContext context) async {
-    return showDialog(
+
+  void showAddCategory() {
+    Alert(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-            title: Text(
-              'Add Category',
-              style: TextStyle(color: Colors.white),
-            ),
-            content: TextField(
+        title: "Add Category",
+        content: Column(
+          children: <Widget>[
+            TextField(
               controller: _textFieldController,
-              style: TextStyle(color: Colors.white),
               onChanged: (value) {
                 categoryInput = value;
               },
-              decoration: InputDecoration(hintText: "Category"),
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('SUBMIT'),
-                onPressed: () {
-                  _textFieldController.clear();
-                  Firestore.instance
-                      .collection('categories')
-                      .document()
-                      .setData({'category': categoryInput, 'email': logInUser});
-                  Navigator.of(context).pop();
-                },
+              decoration: InputDecoration(
+                icon: Icon(Icons.assignment),
+                labelText: 'Category',
               ),
-            ],
-          );
-        });
+            )
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () {
+              if (categoryInput != null && categoryInput != '') {
+                _textFieldController.clear();
+                Firestore.instance
+                    .collection('categories')
+                    .document()
+                    .setData({'category': categoryInput, 'email': logInUser});
+                setState(() {});
+                Navigator.pop(context);
+              }
+            },
+            child: Text(
+              "Submit",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
   }
+
+//
 
   @override
   void initState() {
@@ -58,16 +66,9 @@ class _GroupBuyState extends State<GroupBuy> {
     getCurrentUser();
   }
 
-  getCurrentUser() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      logInUser = prefs.getString('email');
-      setState(() {
-        // updateUI();
-      });
-    } catch (e) {
-      print(e);
-    }
+  void dispose() {
+    _textFieldController.dispose();
+    super.dispose();
   }
 
   void categoryStream() async {
@@ -78,6 +79,19 @@ class _GroupBuyState extends State<GroupBuy> {
       for (var message in snapshot.documents) {
         print(message.data);
       }
+    }
+  }
+
+  getCurrentUser() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      logInUser = prefs.getString('email');
+      //print(logInUser);
+      setState(() {
+        // updateUI();
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -104,7 +118,8 @@ class _GroupBuyState extends State<GroupBuy> {
         child: Icon(Icons.add),
         backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
         onPressed: () {
-          _displayDialog(context);
+          //_displayDialog(context);
+          showAddCategory();
         },
       ),
       bottomNavigationBar: Container(
@@ -115,16 +130,14 @@ class _GroupBuyState extends State<GroupBuy> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.home, color: Colors.white),
+                icon: Icon(Icons.search, color: Colors.white),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(Icons.blur_on, color: Colors.white),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.hotel, color: Colors.white),
-                onPressed: () {},
+                icon: Icon(Icons.assessment, color: Colors.white),
+                onPressed: () {
+                  categoryStream();
+                },
               ),
               IconButton(
                 icon: Icon(Icons.account_box, color: Colors.white),
@@ -146,33 +159,82 @@ class CategoryList extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
-            .collection('categories')
+            .collection("categories")
             .where("email", isEqualTo: logInUser)
+            .orderBy("category")
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.blueAccent,
-              ),
-            );
+          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.blueAccent,
+                ),
+              );
+            default:
+              List<ReusableButton> categoryListWidget = [];
+              final categoryList = snapshot.data.documents;
+
+              for (var category in categoryList) {
+                //print(category.data['category']);
+                final ReusableButton categoryButton = ReusableButton(
+                  text: category.data['category'],
+                  onPress: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('category', category.data['category']);
+                    Navigator.pushNamed(context, DetailedListScreen.id);
+                  },
+                );
+                categoryListWidget.add(categoryButton);
+              }
+              return ListView(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                children: categoryListWidget,
+              );
           }
-          List<ReusableButton> categoryListWidget = [];
-          final categoryList = snapshot.data.documents.reversed;
-          for (var category in categoryList) {
-            final ReusableButton categoryButton = ReusableButton(
-              colour:
-                  Colors.primaries[Random().nextInt(Colors.primaries.length)],
-              text: category.data['category'],
-              onPress: () {},
-            );
-            categoryListWidget.add(categoryButton);
-          }
-          return ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            children: categoryListWidget,
-          );
         });
   }
 }
+
+//_displayDialog(BuildContext context) async {
+//    return showDialog(
+//        context: context,
+//        builder: (context) {
+//          return AlertDialog(
+//            backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+//            title: Text(
+//              'Add Category',
+//              style: TextStyle(color: Colors.white),
+//            ),
+//            content: TextField(
+//              controller: _textFieldController,
+//              style: TextStyle(color: Colors.white),
+//              onChanged: (value) {
+//                categoryInput = value;
+//              },
+//              decoration: InputDecoration(hintText: "Category"),
+//            ),
+//            actions: <Widget>[
+//              new FlatButton(
+//                child: new Text('SUBMIT'),
+//                onPressed: () {
+//                  if (categoryInput != null && categoryInput != '') {
+//                    _textFieldController.clear();
+//                    Firestore.instance
+//                        .collection('categories')
+//                        .document()
+//                        .setData(
+//                            {'category': categoryInput, 'email': logInUser});
+//                    setState(() {});
+//                    Navigator.of(context).pop();
+//                  }
+//                },
+//              ),
+//            ],
+//          );
+//        });
+//  }

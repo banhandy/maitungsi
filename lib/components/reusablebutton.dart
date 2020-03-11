@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ReusableButton extends StatelessWidget {
-  ReusableButton({@required this.colour, this.text, this.onPress});
-  final Color colour;
+  ReusableButton({@required this.text, this.onPress});
   final String text;
   final Function onPress;
   @override

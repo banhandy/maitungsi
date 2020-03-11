@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maitungsi/screens/detailtungsi.dart';
 import 'package:maitungsi/screens/groupbuy.dart';
 import 'package:maitungsi/screens/login.dart';
 import 'package:maitungsi/screens/register.dart';
@@ -30,7 +31,8 @@ class MyApp extends StatelessWidget {
         Splash.id: (context) => Splash(),
         RegisterScreen.id: (context) => RegisterScreen(),
         LoginScreen.id: (context) => LoginScreen(),
-        GroupBuy.id: (context) => GroupBuy()
+        GroupBuy.id: (context) => GroupBuy(),
+        DetailedListScreen.id: (context) => DetailedListScreen()
       },
     );
   }
