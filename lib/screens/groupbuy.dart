@@ -137,6 +137,7 @@ class _GroupBuyState extends State<GroupBuy> {
                 icon: Icon(Icons.assessment, color: Colors.white),
                 onPressed: () {
                   categoryStream();
+
                 },
               ),
               IconButton(

@@ -4,6 +4,7 @@ import 'package:maitungsi/screens/groupbuy.dart';
 import 'package:maitungsi/screens/login.dart';
 import 'package:maitungsi/screens/register.dart';
 import 'package:maitungsi/screens/splash.dart';
+import 'package:maitungsi/screens/tungsi.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         RegisterScreen.id: (context) => RegisterScreen(),
         LoginScreen.id: (context) => LoginScreen(),
         GroupBuy.id: (context) => GroupBuy(),
-        DetailedListScreen.id: (context) => DetailedListScreen()
+        DetailedListScreen.id: (context) => DetailedListScreen(),
+        Tungsi.id: (context) => Tungsi()
       },
     );
   }

@@ -16,8 +16,10 @@ class ReusableButton extends StatelessWidget {
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             title: Text(
               text,
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0),
             ),
             trailing: Icon(Icons.keyboard_arrow_right,
                 color: Colors.white, size: 30.0),

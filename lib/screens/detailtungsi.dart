@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:maitungsi/screens/tungsi.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maitungsi/components/reusablebutton.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -18,9 +19,9 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
   String quantity;
   String price;
 
-  TextEditingController _textFieldControllername = TextEditingController();
-  TextEditingController _textFieldControllerqty = TextEditingController();
-  TextEditingController _textFieldControllerprice = TextEditingController();
+  TextEditingController _textFieldControllerName = TextEditingController();
+  TextEditingController _textFieldControllerQty = TextEditingController();
+  TextEditingController _textFieldControllerPrice = TextEditingController();
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
         content: Column(
           children: <Widget>[
             TextField(
-              controller: _textFieldControllername,
+              controller: _textFieldControllerName,
               onChanged: (value) {
                 name = value;
               },
@@ -45,7 +46,7 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
               ),
             ),
             TextField(
-              controller: _textFieldControllerprice,
+              controller: _textFieldControllerPrice,
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 price = value;
@@ -56,7 +57,7 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
               ),
             ),
             TextField(
-              controller: _textFieldControllerqty,
+              controller: _textFieldControllerQty,
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 quantity = value;
@@ -77,9 +78,9 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
                   quantity != '' &&
                   price != null &&
                   price != '') {
-                _textFieldControllername.clear();
-                _textFieldControllerprice.clear();
-                _textFieldControllerqty.clear();
+                _textFieldControllerName.clear();
+                _textFieldControllerPrice.clear();
+                _textFieldControllerQty.clear();
                 Firestore.instance.collection('tungsi').document().setData({
                   'category': categoryInput,
                   'date': Timestamp.now(),
@@ -111,6 +112,18 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
     }
   }
 
+  void categoryStream() async {
+    await for (var snapshot in Firestore.instance
+        .collection('tungsi')
+        .where("email", isEqualTo: logInUser)
+        .where("category", isEqualTo: categoryInput)
+        .snapshots()) {
+      for (var message in snapshot.documents) {
+        print(message.data['name']);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,6 +138,7 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
           //Navigator.pushNamed(context, InputItem.id);
           //_displayDialog(context);
           showAddCategory();
+          //categoryStream();
         },
       ),
     );
@@ -157,19 +171,32 @@ class DetailedList extends StatelessWidget {
               ),
             );
           default:
+            List<String> nameList = [];
             List<ReusableButton> categoryListWidget = [];
             final itemList = snapshot.data.documents;
             for (var item in itemList) {
-              final ReusableButton categoryButton = ReusableButton(
-                text: item.data['name'],
-                onPress: () {},
-//            () async {
-//              SharedPreferences prefs = await SharedPreferences.getInstance();
-//              prefs.setString('category', category.data['category']);
-//              Navigator.pushNamed(context, DetailedListScreen.id);
-//            },
-              );
-              categoryListWidget.add(categoryButton);
+              int flag = 0;
+              if (nameList.length != 0) {
+                for (var name in nameList) {
+                  if (item.data['name'] == name) {
+                    flag = 1;
+                  }
+                }
+              }
+              nameList.add(item.data['name']);
+              if (flag == 0) {
+                final ReusableButton categoryButton = ReusableButton(
+                  text: item.data['name'],
+                  onPress: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('item', item.data['name']);
+                    Navigator.pushNamed(context, Tungsi.id);
+                  },
+                );
+
+                categoryListWidget.add(categoryButton);
+              }
             }
             return ListView(
               scrollDirection: Axis.vertical,
