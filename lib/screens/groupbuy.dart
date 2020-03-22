@@ -60,12 +60,6 @@ class _GroupBuyState extends State<GroupBuy> {
 
 //
 
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
-
   void dispose() {
     _textFieldController.dispose();
     super.dispose();
@@ -79,6 +73,7 @@ class _GroupBuyState extends State<GroupBuy> {
       for (var message in snapshot.documents) {
         print(message.data);
       }
+      setState(() {});
     }
   }
 
@@ -88,11 +83,17 @@ class _GroupBuyState extends State<GroupBuy> {
       logInUser = prefs.getString('email');
       //print(logInUser);
       setState(() {
-        // updateUI();
+        categoryStream();
       });
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
   }
 
   @override
@@ -118,7 +119,6 @@ class _GroupBuyState extends State<GroupBuy> {
         child: Icon(Icons.add),
         backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
         onPressed: () {
-          //_displayDialog(context);
           showAddCategory();
         },
       ),
@@ -137,7 +137,6 @@ class _GroupBuyState extends State<GroupBuy> {
                 icon: Icon(Icons.assessment, color: Colors.white),
                 onPressed: () {
                   categoryStream();
-
                 },
               ),
               IconButton(
@@ -200,42 +199,3 @@ class CategoryList extends StatelessWidget {
         });
   }
 }
-
-//_displayDialog(BuildContext context) async {
-//    return showDialog(
-//        context: context,
-//        builder: (context) {
-//          return AlertDialog(
-//            backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-//            title: Text(
-//              'Add Category',
-//              style: TextStyle(color: Colors.white),
-//            ),
-//            content: TextField(
-//              controller: _textFieldController,
-//              style: TextStyle(color: Colors.white),
-//              onChanged: (value) {
-//                categoryInput = value;
-//              },
-//              decoration: InputDecoration(hintText: "Category"),
-//            ),
-//            actions: <Widget>[
-//              new FlatButton(
-//                child: new Text('SUBMIT'),
-//                onPressed: () {
-//                  if (categoryInput != null && categoryInput != '') {
-//                    _textFieldController.clear();
-//                    Firestore.instance
-//                        .collection('categories')
-//                        .document()
-//                        .setData(
-//                            {'category': categoryInput, 'email': logInUser});
-//                    setState(() {});
-//                    Navigator.of(context).pop();
-//                  }
-//                },
-//              ),
-//            ],
-//          );
-//        });
-//  }

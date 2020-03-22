@@ -23,12 +23,6 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
   TextEditingController _textFieldControllerQty = TextEditingController();
   TextEditingController _textFieldControllerPrice = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
-
   void showAddCategory() {
     Alert(
         context: context,
@@ -89,7 +83,11 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
                   'price': double.parse(price),
                   'quantity': double.parse(quantity)
                 });
-                setState(() {});
+                setState(() {
+                  name = '';
+                  price = '';
+                  quantity = '';
+                });
                 Navigator.pop(context);
               }
             },
@@ -106,7 +104,9 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       logInUser = prefs.getString('email');
       categoryInput = prefs.getString('category');
-      setState(() {});
+      setState(() {
+        categoryStream();
+      });
     } catch (e) {
       print(e);
     }
@@ -119,9 +119,16 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
         .where("category", isEqualTo: categoryInput)
         .snapshots()) {
       for (var message in snapshot.documents) {
-        print(message.data['name']);
+        //print(message.data['name']);
       }
+      setState(() {});
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
   }
 
   @override
@@ -135,10 +142,7 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
         child: Icon(Icons.add),
         backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
         onPressed: () {
-          //Navigator.pushNamed(context, InputItem.id);
-          //_displayDialog(context);
           showAddCategory();
-          //categoryStream();
         },
       ),
     );

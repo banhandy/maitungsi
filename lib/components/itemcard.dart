@@ -134,8 +134,10 @@ class ItemCard extends StatelessWidget {
               ),
             ],
           ),
-          trailing: Icon(Icons.delete, color: Colors.white, size: 30.0),
-          onTap: onPress,
+          trailing: GestureDetector(
+            child: Icon(Icons.delete, color: Colors.white, size: 30.0),
+            onTap: onPress,
+          ),
         ),
       ),
     );
