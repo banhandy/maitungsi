@@ -44,7 +44,7 @@ class _TungsiState extends State<Tungsi> {
     return Scaffold(
       //resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(item),
+        title: Text(item + ' - Price History'),
       ),
       body: SafeArea(
         child: Column(

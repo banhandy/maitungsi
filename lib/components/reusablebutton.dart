@@ -4,6 +4,7 @@ class ReusableButton extends StatelessWidget {
   ReusableButton({@required this.text, this.onPress});
   final String text;
   final Function onPress;
+  //String category = '';
   @override
   Widget build(BuildContext context) {
     return Card(

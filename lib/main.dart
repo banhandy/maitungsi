@@ -3,6 +3,7 @@ import 'package:maitungsi/screens/detailtungsi.dart';
 import 'package:maitungsi/screens/groupbuy.dart';
 import 'package:maitungsi/screens/login.dart';
 import 'package:maitungsi/screens/register.dart';
+import 'package:maitungsi/screens/searchitem.dart';
 import 'package:maitungsi/screens/splash.dart';
 import 'package:maitungsi/screens/tungsi.dart';
 
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         GroupBuy.id: (context) => GroupBuy(),
         DetailedListScreen.id: (context) => DetailedListScreen(),
-        Tungsi.id: (context) => Tungsi()
+        Tungsi.id: (context) => Tungsi(),
+        SearchScreen.id: (context) => SearchScreen()
       },
     );
   }

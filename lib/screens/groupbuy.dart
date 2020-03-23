@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maitungsi/screens/detailtungsi.dart';
 import 'package:maitungsi/screens/login.dart';
+import 'package:maitungsi/screens/searchitem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:maitungsi/components/reusablebutton.dart';
@@ -102,7 +103,7 @@ class _GroupBuyState extends State<GroupBuy> {
       appBar: AppBar(
         elevation: 4.0,
         backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-        title: Text('My Buy List'),
+        title: Text('Mai Tung Si'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),
@@ -131,7 +132,9 @@ class _GroupBuyState extends State<GroupBuy> {
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.search, color: Colors.white),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, SearchScreen.id);
+                },
               ),
               IconButton(
                 icon: Icon(Icons.assessment, color: Colors.white),

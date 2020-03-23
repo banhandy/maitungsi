@@ -152,6 +152,7 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
 class DetailedList extends StatelessWidget {
   final String logInUser;
   final String category;
+  String flagName = '';
 
   DetailedList(this.logInUser, this.category);
 
@@ -162,7 +163,7 @@ class DetailedList extends StatelessWidget {
           .collection("tungsi")
           .where("email", isEqualTo: logInUser)
           .where("category", isEqualTo: category)
-          .orderBy("category")
+          .orderBy("name")
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -179,16 +180,8 @@ class DetailedList extends StatelessWidget {
             List<ReusableButton> categoryListWidget = [];
             final itemList = snapshot.data.documents;
             for (var item in itemList) {
-              int flag = 0;
-              if (nameList.length != 0) {
-                for (var name in nameList) {
-                  if (item.data['name'] == name) {
-                    flag = 1;
-                  }
-                }
-              }
-              nameList.add(item.data['name']);
-              if (flag == 0) {
+              if (flagName != item.data['name']) {
+                flagName = item.data['name'];
                 final ReusableButton categoryButton = ReusableButton(
                   text: item.data['name'],
                   onPress: () async {
@@ -201,6 +194,29 @@ class DetailedList extends StatelessWidget {
 
                 categoryListWidget.add(categoryButton);
               }
+
+//              int flag = 0;
+//              if (nameList.length != 0) {
+//                for (var name in nameList) {
+//                  if (item.data['name'] == name) {
+//                    flag = 1;
+//                  }
+//                }
+//              }
+//              nameList.add(item.data['name']);
+//              if (flag == 0) {
+//                final ReusableButton categoryButton = ReusableButton(
+//                  text: item.data['name'],
+//                  onPress: () async {
+//                    SharedPreferences prefs =
+//                        await SharedPreferences.getInstance();
+//                    prefs.setString('item', item.data['name']);
+//                    Navigator.pushNamed(context, Tungsi.id);
+//                  },
+//                );
+//
+//                categoryListWidget.add(categoryButton);
+//              }
             }
             return ListView(
               scrollDirection: Axis.vertical,
