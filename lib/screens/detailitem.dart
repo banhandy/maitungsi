@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:maitungsi/screens/tungsi.dart';
+import 'package:maitungsi/screens/pricehistory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:maitungsi/components/reusablebutton.dart';
+import 'package:maitungsi/components/cardwithtittle.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class DetailedListScreen extends StatefulWidget {
@@ -126,6 +126,15 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _textFieldControllerName.dispose();
+    _textFieldControllerPrice.dispose();
+    _textFieldControllerQty.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     getCurrentUser();
@@ -152,7 +161,6 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
 class DetailedList extends StatelessWidget {
   final String logInUser;
   final String category;
-  String flagName = '';
 
   DetailedList(this.logInUser, this.category);
 
@@ -176,8 +184,8 @@ class DetailedList extends StatelessWidget {
               ),
             );
           default:
-            List<String> nameList = [];
             List<ReusableButton> categoryListWidget = [];
+            String flagName = '';
             final itemList = snapshot.data.documents;
             for (var item in itemList) {
               if (flagName != item.data['name']) {
@@ -188,35 +196,12 @@ class DetailedList extends StatelessWidget {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     prefs.setString('item', item.data['name']);
-                    Navigator.pushNamed(context, Tungsi.id);
+                    Navigator.pushNamed(context, PriceHistoryScreen.id);
                   },
                 );
 
                 categoryListWidget.add(categoryButton);
               }
-
-//              int flag = 0;
-//              if (nameList.length != 0) {
-//                for (var name in nameList) {
-//                  if (item.data['name'] == name) {
-//                    flag = 1;
-//                  }
-//                }
-//              }
-//              nameList.add(item.data['name']);
-//              if (flag == 0) {
-//                final ReusableButton categoryButton = ReusableButton(
-//                  text: item.data['name'],
-//                  onPress: () async {
-//                    SharedPreferences prefs =
-//                        await SharedPreferences.getInstance();
-//                    prefs.setString('item', item.data['name']);
-//                    Navigator.pushNamed(context, Tungsi.id);
-//                  },
-//                );
-//
-//                categoryListWidget.add(categoryButton);
-//              }
             }
             return ListView(
               scrollDirection: Axis.vertical,

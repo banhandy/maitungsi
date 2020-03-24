@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:maitungsi/screens/detailtungsi.dart';
-import 'package:maitungsi/screens/groupbuy.dart';
+import 'package:maitungsi/screens/detailitem.dart';
+import 'package:maitungsi/screens/categorylist.dart';
 import 'package:maitungsi/screens/login.dart';
 import 'package:maitungsi/screens/register.dart';
 import 'package:maitungsi/screens/searchitem.dart';
 import 'package:maitungsi/screens/splash.dart';
-import 'package:maitungsi/screens/tungsi.dart';
+import 'package:maitungsi/screens/pricehistory.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
           color: Color.fromRGBO(58, 66, 86, 1.0),
         ),
         primaryColor: Colors.blueGrey,
+        hintColor: Colors.white,
         scaffoldBackgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
       ),
       initialRoute: Splash.id,
@@ -27,9 +28,9 @@ class MyApp extends StatelessWidget {
         Splash.id: (context) => Splash(),
         RegisterScreen.id: (context) => RegisterScreen(),
         LoginScreen.id: (context) => LoginScreen(),
-        GroupBuy.id: (context) => GroupBuy(),
+        CategoryScreen.id: (context) => CategoryScreen(),
         DetailedListScreen.id: (context) => DetailedListScreen(),
-        Tungsi.id: (context) => Tungsi(),
+        PriceHistoryScreen.id: (context) => PriceHistoryScreen(),
         SearchScreen.id: (context) => SearchScreen()
       },
     );

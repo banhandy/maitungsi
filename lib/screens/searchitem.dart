@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:maitungsi/components/searchitemcard.dart';
+import 'package:maitungsi/screens/pricehistory.dart';
 
 class SearchScreen extends StatefulWidget {
   static String id = 'search screen';
@@ -31,7 +32,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void categoryStream() async {
-    //TODO : refined disticnt
     await for (var snapshot in Firestore.instance
         .collection('tungsi')
         .where("email", isEqualTo: logInUser)
@@ -73,6 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    _searchQuery.dispose();
   }
 
   @override
@@ -86,6 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
             onPressed: () {
               setState(() {
                 this.appBarTitle = TextField(
+                  style: TextStyle(color: Colors.white),
                   controller: _searchQuery,
                   decoration: InputDecoration(
                       prefixIcon: new Icon(Icons.search, color: Colors.white),
@@ -104,7 +106,15 @@ class _SearchScreenState extends State<SearchScreen> {
               ? SearchItemCard(
                   text: searchList[index].name,
                   category: searchList[index].category,
-                  onPress: () {},
+                  onPress: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('item', searchList[index].name);
+                    prefs.setString('category', searchList[index].category);
+                    Navigator.pushReplacementNamed(
+                        context, PriceHistoryScreen.id);
+                    print('click');
+                  },
                 )
               : searchList[index]
                       .name
@@ -113,61 +123,20 @@ class _SearchScreenState extends State<SearchScreen> {
                   ? SearchItemCard(
                       text: searchList[index].name,
                       category: searchList[index].category,
-                      onPress: () {},
+                      onPress: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setString('item', searchList[index].name);
+                        prefs.setString('category', searchList[index].category);
+                        Navigator.pushReplacementNamed(
+                            context, PriceHistoryScreen.id);
+                        print('click');
+                      },
                     )
                   : Container();
         },
       ),
     );
-  }
-}
-
-class SearchItemList extends StatefulWidget {
-  final String logInUser;
-
-  SearchItemList({this.logInUser});
-
-  @override
-  _SearchItemListState createState() => _SearchItemListState();
-}
-
-class _SearchItemListState extends State<SearchItemList> {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
-            .collection("tungsi")
-            .where("email", isEqualTo: widget.logInUser)
-            .orderBy("name")
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.blueAccent,
-                ),
-              );
-            default:
-              List<SearchItemCard> searchList = [];
-              final itemList = snapshot.data.documents;
-              for (var item in itemList) {
-                final SearchItemCard itemCard = SearchItemCard(
-                  text: item.data['name'],
-                  category: item.data['category'],
-                  onPress: () {},
-                );
-                searchList.add(itemCard);
-              }
-              return ListView(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                children: searchList,
-              );
-          }
-        });
   }
 }
 

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:maitungsi/screens/detailtungsi.dart';
+import 'package:maitungsi/screens/detailitem.dart';
 import 'package:maitungsi/screens/login.dart';
 import 'package:maitungsi/screens/searchitem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:maitungsi/components/reusablebutton.dart';
+import 'package:maitungsi/components/cardwithtittle.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class GroupBuy extends StatefulWidget {
+class CategoryScreen extends StatefulWidget {
   static String id = 'Group Buy';
 
   @override
-  _GroupBuyState createState() => _GroupBuyState();
+  _CategoryScreenState createState() => _CategoryScreenState();
 }
 
-class _GroupBuyState extends State<GroupBuy> {
+class _CategoryScreenState extends State<CategoryScreen> {
   String logInUser;
   String categoryInput;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'groupbuy.dart';
+import 'categorylist.dart';
 
 class Splash extends StatefulWidget {
   static const id = 'splash_screen';
@@ -35,7 +35,7 @@ class _SplashState extends State<Splash> {
         //print(prefs.getString('email'));
         Future.delayed(
           Duration(seconds: 2),
-          () => Navigator.pushReplacementNamed(context, GroupBuy.id),
+          () => Navigator.pushReplacementNamed(context, CategoryScreen.id),
         );
       } else {
         Future.delayed(

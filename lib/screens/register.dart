@@ -3,7 +3,7 @@ import 'package:maitungsi/components/roundbutton.dart';
 import 'package:maitungsi/constants.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:maitungsi/screens/groupbuy.dart';
+import 'package:maitungsi/screens/categorylist.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -95,7 +95,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         prefs.setString('email', email);
-                        Navigator.pushReplacementNamed(context, GroupBuy.id);
+                        Navigator.pushReplacementNamed(
+                            context, CategoryScreen.id);
                       }
                       setState(() {
                         showSpinner = false;

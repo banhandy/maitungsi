@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maitungsi/constants.dart';
 import 'package:maitungsi/components/roundbutton.dart';
-import 'package:maitungsi/screens/groupbuy.dart';
+import 'package:maitungsi/screens/categorylist.dart';
 import 'package:maitungsi/screens/register.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         prefs.setString('email', loggedInUser.email);
-                        Navigator.pushReplacementNamed(context, GroupBuy.id);
+                        Navigator.pushReplacementNamed(
+                            context, CategoryScreen.id);
                       }
                     } catch (e) {
                       print(e);

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:maitungsi/components/itemcard.dart';
+import 'package:maitungsi/components/historycard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Tungsi extends StatefulWidget {
+class PriceHistoryScreen extends StatefulWidget {
   static const id = 'tungsi_screen';
 
   @override
-  _TungsiState createState() => _TungsiState();
+  _PriceHistoryScreenState createState() => _PriceHistoryScreenState();
 }
 
-class _TungsiState extends State<Tungsi> {
+class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
   String logInUser;
   String categoryInput = '';
   TextEditingController _textFieldControllerQty = TextEditingController();
@@ -30,6 +30,14 @@ class _TungsiState extends State<Tungsi> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _textFieldControllerQty.dispose();
+    _textFieldControllerPrice.dispose();
   }
 
   @override
@@ -72,10 +80,12 @@ class _TungsiState extends State<Tungsi> {
                         onChanged: (value) {
                           price = value;
                         },
+                        style: TextStyle(color: Colors.white),
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                           labelText: 'Price',
+                          labelStyle: TextStyle(color: Colors.white),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(10.0),
@@ -94,10 +104,11 @@ class _TungsiState extends State<Tungsi> {
                           onChanged: (value) {
                             quantity = value;
                           },
+                          style: TextStyle(color: Colors.white),
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             labelText: 'Quantity',
-                            fillColor: Colors.white,
+                            labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
@@ -133,7 +144,7 @@ class _TungsiState extends State<Tungsi> {
                     child: Text(
                       'Add',
                       style: TextStyle(
-                        color: Colors.blueGrey,
+                        color: Colors.white,
                         fontSize: 22.0,
                       ),
                     ),
