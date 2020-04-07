@@ -4,6 +4,7 @@ import 'package:maitungsi/screens/pricehistory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maitungsi/components/cardwithtittle.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:maitungsi/constants.dart';
 
 class DetailedListScreen extends StatefulWidget {
   static const id = 'detailed_screen';
@@ -30,6 +31,7 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
         content: Column(
           children: <Widget>[
             TextField(
+              autofocus: true,
               controller: _textFieldControllerName,
               onChanged: (value) {
                 name = value;
@@ -87,14 +89,15 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
                   name = '';
                   price = '';
                   quantity = '';
+                  Navigator.pop(context);
                 });
-                Navigator.pop(context);
               }
             },
             child: Text(
               "Submit",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: kMainTextStyle,
             ),
+            color: kPrimaryColor,
           )
         ]).show();
   }
@@ -128,10 +131,10 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _textFieldControllerName.dispose();
     _textFieldControllerPrice.dispose();
     _textFieldControllerQty.dispose();
+    super.dispose();
   }
 
   @override
@@ -148,8 +151,11 @@ class _DetailedListScreenState extends State<DetailedListScreen> {
       ),
       body: DetailedList(logInUser, categoryInput),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        child: Icon(
+          Icons.add,
+          color: kSecondaryColor,
+        ),
+        backgroundColor: kMainColor,
         onPressed: () {
           showAddCategory();
         },

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:maitungsi/constants.dart';
 import 'package:maitungsi/screens/detailitem.dart';
 import 'package:maitungsi/screens/login.dart';
+import 'package:maitungsi/screens/monthlyreport.dart';
 import 'package:maitungsi/screens/searchitem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,13 +22,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   TextEditingController _textFieldController = TextEditingController();
 
-  void showAddCategory() {
+  _showAddCategory() {
     Alert(
         context: context,
         title: "Add Category",
         content: Column(
           children: <Widget>[
             TextField(
+              autofocus: true,
               controller: _textFieldController,
               onChanged: (value) {
                 categoryInput = value;
@@ -53,8 +56,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
             },
             child: Text(
               "Submit",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: kMainTextStyle,
             ),
+            color: kPrimaryColor,
           )
         ]).show();
   }
@@ -102,11 +106,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 4.0,
-        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        backgroundColor: kMainColor,
         title: Text('Mai Tung Si'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Colors.redAccent,
+            ),
             onPressed: () async {
               SharedPreferences pref = await SharedPreferences.getInstance();
               pref.remove('email');
@@ -117,29 +124,40 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
       body: CategoryList(logInUser),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        child: Icon(
+          Icons.add,
+          color: kSecondaryColor,
+        ),
+        backgroundColor: kMainColor,
         onPressed: () {
-          showAddCategory();
+          _showAddCategory();
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      extendBody: true,
       bottomNavigationBar: Container(
         height: 55.0,
         child: BottomAppBar(
-          color: Color.fromRGBO(58, 66, 86, 1.0),
+          shape: CircularNotchedRectangle(),
+          color: kMainColor,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
+              SizedBox(width: 20.0),
               IconButton(
                 icon: Icon(Icons.search, color: Colors.white),
                 onPressed: () {
                   Navigator.pushNamed(context, SearchScreen.id);
                 },
               ),
+              SizedBox(width: 50.0),
               IconButton(
                 icon: Icon(Icons.assessment, color: Colors.white),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, MonthlyReportScreen.id);
+                },
               ),
+              SizedBox(width: 50.0),
               IconButton(
                 icon: Icon(Icons.account_box, color: Colors.white),
                 onPressed: () {},
@@ -200,3 +218,96 @@ class CategoryList extends StatelessWidget {
         });
   }
 }
+
+//Widget _topActions(BuildContext context) => Container(
+//  width: double.infinity,
+//  padding: EdgeInsets.symmetric(horizontal: 20.0),
+//  child: Card(
+//    color: Color.fromRGBO(58, 66, 86, 1.0),
+//    elevation: 2,
+//    child: Padding(
+//      padding: EdgeInsets.symmetric(vertical: 10),
+//      child: Row(
+//        children: <Widget>[
+//          SizedBox(
+//            width: 20,
+//          ),
+//          Expanded(
+//            child: Text('Mai Tung Si', softWrap: false),
+//          ),
+//          InkWell(
+//              child: Icon(Icons.exit_to_app),
+//              onTap: () => () async {
+//                SharedPreferences pref =
+//                await SharedPreferences.getInstance();
+//                pref.remove('email');
+//                Navigator.pushReplacementNamed(context, LoginScreen.id);
+//              }),
+//          SizedBox(width: 10),
+//        ],
+//      ),
+//    ),
+//  ),
+//);
+
+//better UIUX
+//body: CustomScrollView(
+//slivers: <Widget>[
+//SliverAppBar(
+//floating: true,
+//snap: true,
+//title: _topActions(context),
+//automaticallyImplyLeading: false,
+//centerTitle: true,
+//titleSpacing: 0,
+//backgroundColor: Colors.transparent,
+//elevation: 0,
+//),
+//SliverToBoxAdapter(
+//child: SizedBox(height: 24), // top spacing
+//),
+////CategoryList(logInUser),
+//SliverToBoxAdapter(
+//child: SizedBox(height: 24), // top spacing
+//),
+//],
+//),
+//floatingActionButton: FloatingActionButton(
+//child: Icon(Icons.add),
+//backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+//onPressed: () {
+//showAddCategory();
+//},
+//),
+//bottomNavigationBar: BottomAppBar(
+//shape: const CircularNotchedRectangle(),
+//child: Container(
+//height: 55,
+//color: Color.fromRGBO(58, 66, 86, 1.0),
+//padding: EdgeInsets.symmetric(horizontal: 17),
+//child: Row(
+//// mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//children: <Widget>[
+//IconButton(
+//icon: Icon(Icons.search, color: Colors.white),
+//onPressed: () {
+//Navigator.pushNamed(context, SearchScreen.id);
+//},
+//),
+//SizedBox(width: 30),
+//IconButton(
+//icon: Icon(Icons.assessment, color: Colors.white),
+//onPressed: () {
+//Navigator.pushNamed(context, MonthlyReportScreen.id);
+//},
+//),
+//SizedBox(width: 30),
+//IconButton(
+//icon: Icon(Icons.account_box, color: Colors.white),
+//onPressed: () {},
+//),
+//]),
+//),
+//),
+//floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+//extendBody: true,

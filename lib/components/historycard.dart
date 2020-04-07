@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:maitungsi/constants.dart';
 
 class ItemCard extends StatelessWidget {
   final double value;
   final double quantity;
   final Timestamp date;
   final Function onPress;
+
+  final f = NumberFormat("#,###.0#", "en_US");
 
   ItemCard({this.date, this.quantity, this.value, this.onPress});
 
@@ -82,62 +86,48 @@ class ItemCard extends StatelessWidget {
       elevation: 10.0,
       margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+        decoration: BoxDecoration(color: kPrimaryColor),
         child: ListTile(
           contentPadding:
               EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           leading: Container(
             padding: EdgeInsets.only(right: 10.0),
-            decoration: new BoxDecoration(
-                border: new Border(
-                    right: new BorderSide(width: 1.0, color: Colors.white24))),
+            decoration: kBoxBorderOneSide,
             child: Column(
               children: <Widget>[
                 Text(
                   date.toDate().day.toString() +
                       ' ' +
                       generateMonth(date.toDate().month),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25.0),
+                  style: kMainTextStyle,
                 ),
                 Text(
                   date.toDate().year.toString(),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
+                  style: kMainTextStyle,
                 ),
               ],
             ),
           ),
           title: Text(
-            this.value.toInt().toString(),
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 25.0),
+            f.format(this.value),
+            style: kMainTextStyle,
           ),
           subtitle: Row(
             children: <Widget>[
-              Icon(Icons.shopping_cart, color: Colors.yellowAccent),
+              Icon(Icons.shopping_cart, color: kSecondaryColor),
               SizedBox(
                 width: 20.0,
               ),
               Text(
                 this.quantity.toInt().toString(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
+                style: kMainTextStyle,
               ),
             ],
           ),
           trailing: Material(
-            color: Color.fromRGBO(64, 75, 96, 255),
+            color: Colors.transparent,
             child: InkWell(
-              child: Icon(Icons.delete, color: Colors.white, size: 30.0),
+              child: Icon(Icons.delete, color: Colors.redAccent, size: 30.0),
               onTap: onPress,
             ),
           ),

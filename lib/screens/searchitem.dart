@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:maitungsi/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:maitungsi/components/searchitemcard.dart';
 import 'package:maitungsi/screens/pricehistory.dart';
+import 'package:maitungsi/model.dart';
 
 class SearchScreen extends StatefulWidget {
   static String id = 'search screen';
@@ -13,10 +15,12 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   String logInUser;
-  List<SearchItemTungsi> searchList = [];
+  List<ItemList> searchList = [];
   Widget appBarTitle = Text('Search');
   String filter = '';
   String flagName = '';
+  String flagCategory = '';
+  bool flagShow = true;
   final TextEditingController _searchQuery = new TextEditingController();
 
   getCurrentUser() async {
@@ -32,21 +36,21 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void categoryStream() async {
+    List<Map> categoryItemMapList = [];
+    var nameCategoryMap = Map();
     await for (var snapshot in Firestore.instance
         .collection('tungsi')
         .where("email", isEqualTo: logInUser)
         .orderBy("name")
         .snapshots()) {
       for (var message in snapshot.documents) {
-        if (flagName != message.data['name']) {
-          flagName = message.data['name'];
-          SearchItemTungsi item = SearchItemTungsi(
-              category: message.data['category'], name: message.data['name']);
-          searchList.add(item);
-          flagName = message.data['name'];
-        }
-        //print(message.data);
+        nameCategoryMap[message.data['name']] = message.data['category'];
       }
+      nameCategoryMap.forEach((k, v) {
+        ItemList item = ItemList(category: v, name: k);
+        searchList.add(item);
+      });
+
       setState(() {});
     }
   }
@@ -63,7 +67,6 @@ class _SearchScreenState extends State<SearchScreen> {
       } else {
         setState(() {
           filter = _searchQuery.text;
-          print(filter);
         });
       }
     });
@@ -82,21 +85,28 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         title: appBarTitle,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              setState(() {
-                this.appBarTitle = TextField(
-                  style: TextStyle(color: Colors.white),
-                  controller: _searchQuery,
-                  decoration: InputDecoration(
-                      prefixIcon: new Icon(Icons.search, color: Colors.white),
-                      hintText: "Search...",
-                      hintStyle: new TextStyle(color: Colors.white)),
-                );
-              });
-            },
-          )
+          Visibility(
+            visible: flagShow,
+            child: IconButton(
+              icon: Icon(
+                Icons.search,
+                color: kSecondaryColor,
+              ),
+              onPressed: () {
+                flagShow = false;
+                setState(() {
+                  this.appBarTitle = TextField(
+                    autofocus: true,
+                    style: kMainTextStyle,
+                    controller: _searchQuery,
+                    decoration: InputDecoration(
+                        hintText: "Search...",
+                        hintStyle: kMainTextStyle.copyWith(color: Colors.grey)),
+                  );
+                });
+              },
+            ),
+          ),
         ],
       ),
       body: ListView.builder(
@@ -113,7 +123,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     prefs.setString('category', searchList[index].category);
                     Navigator.pushReplacementNamed(
                         context, PriceHistoryScreen.id);
-                    print('click');
                   },
                 )
               : searchList[index]
@@ -130,7 +139,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         prefs.setString('category', searchList[index].category);
                         Navigator.pushReplacementNamed(
                             context, PriceHistoryScreen.id);
-                        print('click');
+                        //print('click');
                       },
                     )
                   : Container();
@@ -138,11 +147,4 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-}
-
-class SearchItemTungsi {
-  final String name;
-  final String category;
-
-  SearchItemTungsi({this.category, this.name});
 }

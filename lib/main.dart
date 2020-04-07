@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:maitungsi/screens/detailitem.dart';
 import 'package:maitungsi/screens/categorylist.dart';
 import 'package:maitungsi/screens/login.dart';
+import 'package:maitungsi/screens/monthlyreport.dart';
 import 'package:maitungsi/screens/register.dart';
+import 'package:maitungsi/screens/reportdetail.dart';
 import 'package:maitungsi/screens/searchitem.dart';
 import 'package:maitungsi/screens/splash.dart';
 import 'package:maitungsi/screens/pricehistory.dart';
+import 'constants.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,11 +20,11 @@ class MyApp extends StatelessWidget {
       title: 'My Buy List',
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-          color: Color.fromRGBO(58, 66, 86, 1.0),
+          color: kMainColor,
         ),
         primaryColor: Colors.blueGrey,
         hintColor: Colors.white,
-        scaffoldBackgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        scaffoldBackgroundColor: kMainColor,
       ),
       initialRoute: Splash.id,
       routes: {
@@ -31,7 +34,9 @@ class MyApp extends StatelessWidget {
         CategoryScreen.id: (context) => CategoryScreen(),
         DetailedListScreen.id: (context) => DetailedListScreen(),
         PriceHistoryScreen.id: (context) => PriceHistoryScreen(),
-        SearchScreen.id: (context) => SearchScreen()
+        SearchScreen.id: (context) => SearchScreen(),
+        MonthlyReportScreen.id: (context) => MonthlyReportScreen(),
+        ReportDetailScreen.id: (context) => ReportDetailScreen()
       },
     );
   }

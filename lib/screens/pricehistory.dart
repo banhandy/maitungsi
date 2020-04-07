@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maitungsi/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:maitungsi/components/historycard.dart';
@@ -35,9 +36,9 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _textFieldControllerQty.dispose();
     _textFieldControllerPrice.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,16 +60,13 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Expanded(child: ItemList(logInUser, categoryInput, item)),
+            Expanded(child: PriceHistoryList(logInUser, categoryInput, item)),
             Container(
               height: 70.0,
               padding: EdgeInsets.all(10.0),
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(64, 75, 96, 0.9),
-                  border: Border(
-                      top: BorderSide(
-                          color: Colors.grey,
-                          width: 3.0))), //padding: EdgeInsets.all(15.0),
+                color: Colors.transparent,
+              ),
               child: Row(
                 children: <Widget>[
                   Expanded(
@@ -83,15 +81,8 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
                         style: TextStyle(color: Colors.white),
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
-                        decoration: InputDecoration(
-                          labelText: 'Price',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                        ),
+                        decoration:
+                            kInputDecoration.copyWith(labelText: 'Price'),
                       ),
                     ),
                   ),
@@ -106,14 +97,8 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
                           },
                           style: TextStyle(color: Colors.white),
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: 'Quantity',
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                          ),
+                          decoration:
+                              kInputDecoration.copyWith(labelText: 'Quantity'),
                         ),
                       )),
                   FlatButton(
@@ -143,10 +128,7 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
                     },
                     child: Text(
                       'Add',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22.0,
-                      ),
+                      style: kMainTextStyle.copyWith(color: kSecondaryColor),
                     ),
                   ),
                 ],
@@ -159,16 +141,16 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
   }
 }
 
-class ItemList extends StatefulWidget {
+class PriceHistoryList extends StatefulWidget {
   final String logInUser;
   final String category;
   final String item;
-  ItemList(this.logInUser, this.category, this.item);
+  PriceHistoryList(this.logInUser, this.category, this.item);
   @override
-  _ItemListState createState() => _ItemListState();
+  _PriceHistoryListState createState() => _PriceHistoryListState();
 }
 
-class _ItemListState extends State<ItemList> {
+class _PriceHistoryListState extends State<PriceHistoryList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -177,7 +159,7 @@ class _ItemListState extends State<ItemList> {
           .where("email", isEqualTo: widget.logInUser)
           .where("category", isEqualTo: widget.category)
           .where("name", isEqualTo: widget.item)
-          .orderBy("date")
+          .orderBy("date", descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -207,23 +189,24 @@ class _ItemListState extends State<ItemList> {
                       DialogButton(
                         child: Text(
                           "Yes",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: kMainTextStyle,
                         ),
                         onPressed: () async {
                           await Firestore.instance
                               .collection("tungsi")
                               .document(item.documentID)
                               .delete();
-                          Navigator.pop(context);
                           setState(() {});
+                          Navigator.pop(context);
                         },
-                        color: Color.fromRGBO(0, 179, 134, 1.0),
+                        color: kPrimaryColor,
                       ),
                       DialogButton(
                         child: Text(
                           "Cancel",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: kMainTextStyle,
                         ),
+                        color: kSecondaryColor,
                         onPressed: () => Navigator.pop(context),
                       )
                     ],
