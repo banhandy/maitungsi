@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white),
+                style: kMainTextStyle,
                 onChanged: (value) {
                   email = value;
                 },
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               TextField(
                 obscureText: true,
-                style: TextStyle(color: Colors.white),
+                style: kMainTextStyle,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   password = value;
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 10.0,
               ),
               RoundButton(
-                buttonColor: Colors.blueAccent,
+                buttonColor: kPrimaryColor,
                 buttonText: 'Login',
                 onPressed: () async {
                   if (email != null && password != null) {
@@ -101,10 +101,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 10.0,
               ),
               RoundButton(
-                buttonColor: Colors.indigo,
+                buttonColor: kSecondaryColor,
                 buttonText: 'Register',
                 onPressed: () {
-                  Navigator.pushNamed(context, RegisterScreen.id);
+                  Navigator.pushReplacementNamed(context, RegisterScreen.id);
                 },
               ),
             ],

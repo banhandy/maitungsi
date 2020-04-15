@@ -5,7 +5,6 @@ import 'package:maitungsi/components/monthlycard.dart';
 import 'package:maitungsi/screens/reportdetail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maitungsi/model.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class MonthlyReportScreen extends StatefulWidget {
   static String id = 'Monthly Report Screen';
@@ -33,7 +32,6 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   }
 
   getStream() async {
-    int index;
     var monthYearMap = Map();
     var monthYearValueMap = Map();
     await for (var snapshot in Firestore.instance

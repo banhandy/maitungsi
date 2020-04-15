@@ -36,7 +36,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void categoryStream() async {
-    List<Map> categoryItemMapList = [];
     var nameCategoryMap = Map();
     await for (var snapshot in Firestore.instance
         .collection('tungsi')

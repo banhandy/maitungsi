@@ -136,7 +136,7 @@ class _CalendarWithListState extends State<CalendarWithList>
           initialCalendarFormat: CalendarFormat.month,
           formatAnimation: FormatAnimation.slide,
           startingDayOfWeek: StartingDayOfWeek.sunday,
-          availableGestures: AvailableGestures.all,
+          availableGestures: AvailableGestures.verticalSwipe,
           availableCalendarFormats: const {
             CalendarFormat.month: '',
             CalendarFormat.week: '',

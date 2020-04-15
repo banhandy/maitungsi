@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maitungsi/components/calendar.dart';
-import 'package:maitungsi/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:maitungsi/components/reportcard.dart';
 import 'package:maitungsi/model.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:maitungsi/components/chart.dart';
 
 class ReportDetailScreen extends StatefulWidget {
@@ -116,8 +114,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     var categoryItemMap = Map();
 
     List<Map> dateItemMapList = [];
-    int index;
-    int indexDetail;
+
     DateTime startDate = DateTime(year, month, 1);
     DateTime endDate;
     if (month == 12) {
@@ -156,10 +153,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             : itemMap[category + name] += price * qty;
 
         categoryItemMap[name] = category;
+
         dateItemMapList.add({
           eventDate: [name, category]
         });
       }
+
       categoryMap.forEach((ck, cv) {
         List<DetailList> detailList = [];
         categoryItemMap.forEach((cik, civ) {
@@ -189,7 +188,18 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                     category: element.values.first[1],
                     itemName: element.values.first[0],
                     value: div);
-                eventList.add(itemDailyList);
+                bool flag = false;
+                if (eventList.length == 0) {
+                  eventList.add(itemDailyList);
+                } else {
+                  for (int i = 0; i < eventList.length; i++) {
+                    if (eventList[i].itemName == itemDailyList.itemName &&
+                        eventList[i].category == itemDailyList.category) {
+                      flag = true;
+                    }
+                  }
+                  if (!flag) eventList.add(itemDailyList);
+                }
               }
             });
           }

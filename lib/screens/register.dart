@@ -81,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 10.0,
               ),
               RoundButton(
-                buttonColor: Colors.blueAccent,
+                buttonColor: kPrimaryColor,
                 buttonText: 'Sign Up',
                 onPressed: () async {
                   if ((isValid) && ((email != null) && (password != null))) {
