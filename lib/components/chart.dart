@@ -11,6 +11,8 @@ class PieChart extends StatelessWidget {
     return [
       charts.Series<CategoryList, String>(
         id: 'Category',
+        colorFn: (_, index) =>
+            charts.MaterialPalette.deepOrange.makeShades(list.length)[index],
         domainFn: (CategoryList series, _) => series.category,
         measureFn: (CategoryList series, _) => series.value,
         data: list,
@@ -23,8 +25,14 @@ class PieChart extends StatelessWidget {
     return charts.PieChart(
       createSampleDate(categoryList),
       animate: true,
-      defaultRenderer: charts.ArcRendererConfig(
-          arcWidth: 80, arcRendererDecorators: [charts.ArcLabelDecorator()]),
+      defaultRenderer:
+          charts.ArcRendererConfig(arcWidth: 80, arcRendererDecorators: [
+        charts.ArcLabelDecorator(
+            outsideLabelStyleSpec: charts.TextStyleSpec(
+          color: charts.Color.white,
+          fontSize: 12,
+        ))
+      ]),
     );
   }
 }

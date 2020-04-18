@@ -56,10 +56,10 @@ class _CalendarWithListState extends State<CalendarWithList>
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: _calendarController.isSelected(date)
-            ? Colors.brown[500]
+            ? kPrimaryColor
             : _calendarController.isToday(date)
                 ? Colors.brown[300]
-                : Colors.blue[400],
+                : kSecondaryColor,
       ),
       width: 16.0,
       height: 16.0,
@@ -144,11 +144,11 @@ class _CalendarWithListState extends State<CalendarWithList>
           calendarStyle: CalendarStyle(
             outsideDaysVisible: false,
             weekdayStyle: TextStyle().copyWith(color: Colors.white),
-            weekendStyle: TextStyle().copyWith(color: Colors.cyanAccent),
-            holidayStyle: TextStyle().copyWith(color: Colors.cyan),
+            weekendStyle: TextStyle().copyWith(color: kSecondaryColor),
+            holidayStyle: TextStyle().copyWith(color: kSecondaryColor),
           ),
           daysOfWeekStyle: DaysOfWeekStyle(
-            weekendStyle: TextStyle().copyWith(color: Colors.lightBlueAccent),
+            weekendStyle: TextStyle().copyWith(color: kSecondaryColor),
             weekdayStyle: TextStyle(color: Colors.white),
           ),
           headerStyle: HeaderStyle(
@@ -163,7 +163,7 @@ class _CalendarWithListState extends State<CalendarWithList>
                 child: Container(
                   margin: const EdgeInsets.all(4.0),
                   padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-                  color: Colors.deepOrange[300],
+                  color: kSecondaryColor,
                   width: 100,
                   height: 100,
                   child: Text(
